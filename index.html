@@ -1,0 +1,96 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tone.js Playground</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.js" integrity="sha512-gqjFRgajJiZM9GmvHEE7vpzPSL/moP+zxpl4F6lRNJDOI3pb2Tvu8k5vUjAzJKsl0ragzWL0/WasKhR430PkCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: calc(100% - 40px);
+        }
+        #go {
+            height: 30px;
+            margin: 5px;
+        }
+        #editor {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <button id="go" onclick="go()">Play</button>
+    <div id="editor">
+hats.start()
+if ([0,4,8,12].indexOf(idx) >= 0) {
+        kick.start()
+}
+
+if ([2,6,10,14].indexOf(idx) >= 0) {
+    snare.start()
+}
+
+//p1.get('hihat').start()
+//polySynth.triggerAttackRelease('C4','16n') 
+
+    </div>
+
+    <script>
+        var editor = ace.edit('editor')
+        editor.setTheme('ace/theme/monokai')
+        editor.getSession().setMode('ace/mode/javascript')
+
+        var vol = new Tone.Volume(-10).toDestination()
+        var polySynth = new Tone.PolySynth()
+
+        /*
+        var p1 = new Tone.Players({
+            'kick': 'https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/test/audio/hh.mp3',
+            'snare': 'https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/test/audio/hh.mp3',
+            'hihat': 'https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/test/audio/hh.mp3'
+        })*/
+
+
+        const hats = new Tone.Player({
+			url: "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/test/audio/hh.mp3",
+			volume: -10,
+			fadeOut: 0.01
+		}).connect(vol)
+
+        const kick = new Tone.Player({
+			url: "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/test/audio/kick.mp3",
+			volume: -10,
+			fadeOut: 0.01
+		}).connect(vol)
+
+
+        const snare = new Tone.Player({
+			url: "https://cdn.jsdelivr.net/gh/Tonejs/Tone.js/test/audio/kick.mp3",
+			volume: -10,
+			fadeOut: 0.01
+		}).connect(vol)
+
+        polySynth.connect(vol)
+        //p1.connect(vol)
+
+        function go() {
+            //polySynth.triggerAttackRelease('C4','16n') 
+
+            Tone.context.latencyHint = 'fastest'
+            Tone.Transport.bpm.value = 120
+            var seq = new Tone.Sequence(function (time, idx) {
+                //p1.get('hihat').start()
+                eval(editor.getValue())
+            }, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], '8n')
+            // alert('chan')
+
+            Tone.Transport.start('+0.2')
+            seq.start()
+        }
+    </script>
+</body>
+</html>
